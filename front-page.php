@@ -292,10 +292,9 @@ $page_id = get_option('page_for_posts');
                         while ($query->have_posts()) {
                             $query->the_post();
                             $terms = get_the_terms($post->ID, 'category');
-                            $categories = [];
                             if ($terms) {
                                 foreach ($terms as $category) {
-                                    echo '<li data-filter=".filter-'.$category->slug.'">'.$category->name.'</li>';
+                                    echo '<li data-filter=".filter-' . $category->slug . '">' . $category->name . '</li>';
                                 }
                             }
                         }
@@ -317,9 +316,9 @@ $page_id = get_option('page_for_posts');
                 <?php foreach ($portfolios as $portfolio) : ?>
                     <?php $categories = get_the_terms($portfolio->ID, 'category'); ?>
                     <?php
+                    $classes = "";
                     foreach ($categories as $category) {
-                        $classes = "";
-                        $classes .= 'filter-'.$category->slug . ' ';
+                        $classes .= 'filter-' . $category->slug . ' ';
                     }
                     ?>
                     <div class="col-lg-4 col-md-6 portfolio-item <?php echo $classes ?>">
@@ -401,7 +400,8 @@ $page_id = get_option('page_for_posts');
                                 </p>
                                 <img src="<?php echo get_the_post_thumbnail_url($testimonial->ID) ?>" class="testimonial-img" alt="<?php echo $testimonial->post_title ?>">
                                 <h3><?php echo $testimonial->post_title ?></h3>
-                                <h4><?php echo get_post_meta($testimonial->ID, '_testimonial_profession_meta_field', true) ?></h4>
+                                <h4><?php echo get_post_meta($testimonial->ID, '_testimonial_profession_meta_field', true) ?>
+                                </h4>
                             </div>
                         </div><!-- End testimonial item -->
                     <?php endforeach; ?>

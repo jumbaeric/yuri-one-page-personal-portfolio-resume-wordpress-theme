@@ -21,7 +21,7 @@ get_header(); ?>
 					elseif (is_year()) :
 						printf(esc_html__('Yearly Archives: %s', 'yuri-lucas'), get_the_date(_x('Y', 'yearly archives date format', 'yuri-lucas')));
 					else :
-						esc_html_e('Blog Archives', 'yuri-lucas');
+						esc_html_e('Portfolio Archives', 'yuri-lucas');
 					endif;
 					?>
 				</h1>
