@@ -578,7 +578,7 @@ add_action('wp_enqueue_scripts', 'yuri_lucas_scripts_loader');
 /**
  * Portfolio Custom post Type.
  */
-function yuri_lucas_portfolio_custom_post_type()
+function yuri_lucas_custom_post_type()
 {
 	register_post_type(
 		'portfolios',
@@ -591,19 +591,50 @@ function yuri_lucas_portfolio_custom_post_type()
 			'has_archive' => true,
 			'rewrite'     => array('slug' => 'portfolios'), // my custom slug
 			'show_in_rest' => true,
-			'supports' => array('title', 'editor', 'custom-fields'),
+			'supports' => array('title', 'editor', 'excerpt', 'custom-fields', 'thumbnail'),
 			'taxonomies' => array('category', 'post_tag'),
 		)
 	);
+
+	register_post_type(
+		'services',
+		array(
+			'labels'      => array(
+				'name'          => __('Services', 'yuri-lucas'),
+				'singular_name' => __('Service', 'yuri-lucas'),
+			),
+			'public'      => true,
+			'has_archive' => true,
+			'rewrite'     => array('slug' => 'services'), // my custom slug
+			'show_in_rest' => true,
+			'supports' => array('title', 'editor', 'excerpt', 'custom-fields', 'thumbnail'),
+			'taxonomies' => array('category', 'post_tag'),
+		)
+	);
+
+	register_post_type(
+		'testimonials',
+		array(
+			'labels'      => array(
+				'name'          => __('Testimonials', 'yuri-lucas'),
+				'singular_name' => __('Testimonial', 'yuri-lucas'),
+			),
+			'public'      => true,
+			'has_archive' => true,
+			'rewrite'     => array('slug' => 'testimonials'), // my custom slug
+			'show_in_rest' => true,
+			'supports' => array('title', 'editor', 'excerpt', 'custom-fields', 'thumbnail'),
+		)
+	);
 }
-add_action('init', 'yuri_lucas_portfolio_custom_post_type');
+add_action('init', 'yuri_lucas_custom_post_type');
 
 /**
  * Portfolio Custom Fields.
  */
 function yuri_lucas_add_portfolio_custom_field()
 {
-	$screens = ['portfolio'];
+	$screens = ['portfolios'];
 	foreach ($screens as $screen) {
 		add_meta_box(
 			'yuri_lucas_box_id',                 // Unique ID
@@ -639,7 +670,7 @@ function yuri_lucas_portfolio_custom_field_html($post)
 /**
  * Portfolio Custom Fields Save.
  */
-function yuri_lucas_save_postdata($post_id)
+function yuri_lucas_save_portfolio_postdata($post_id)
 {
 	if (!isset($_POST['portfolio_meta_box_nonce'])) {
 		return;
@@ -679,4 +710,122 @@ function yuri_lucas_save_postdata($post_id)
 		);
 	}
 }
-add_action('save_post', 'yuri_lucas_save_postdata');
+add_action('save_post', 'yuri_lucas_save_portfolio_postdata');
+
+
+/**
+ * Testimonials Custom Fields.
+ */
+function yuri_lucas_add_testimonial_custom_field()
+{
+	$screens = ['testimonials'];
+	foreach ($screens as $screen) {
+		add_meta_box(
+			'yuri_lucas_box_id',                 // Unique ID
+			'Testimonial Details',      // Box title
+			'yuri_lucas_testimonial_custom_field_html',  // Content callback, must be of type callable
+			$screen                            // Post type
+		);
+	}
+}
+add_action('add_meta_boxes', 'yuri_lucas_add_testimonial_custom_field');
+
+/**
+ * Testimonials Custom Fields HTML.
+ */
+function yuri_lucas_testimonial_custom_field_html($post)
+{
+	wp_nonce_field('yuri_lucas_save_postdata', 'testimonial_meta_box_nonce');
+	$testimonial_profession = get_post_meta($post->ID, '_testimonial_profession_meta_field', true);
+		?>
+		<label for="yuri_lucas_testimonial_profession_field">Profession / Job Title</label>
+		<input type="text" name="yuri_lucas_testimonial_profession_field" id="yuri_lucas_testimonial_profession_field" class="postbox" value="<?php echo esc_attr($testimonial_profession) ?>">
+
+		<?php
+}
+
+/**
+ * Testimonials Custom Fields Save.
+ */
+function yuri_lucas_save_testimonial_postdata($post_id)
+{
+	if (!isset($_POST['testimonial_meta_box_nonce'])) {
+		return;
+	}
+
+	if (!wp_verify_nonce($_POST['testimonial_meta_box_nonce'], 'yuri_lucas_save_postdata')) {
+		return;
+	}
+
+	if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+		return;
+	}
+	if (array_key_exists('yuri_lucas_testimonial_profession_field', $_POST)) {
+		$testimonial_profession = sanitize_text_field($_POST['yuri_lucas_testimonial_profession_field']);
+		update_post_meta(
+			$post_id,
+			'_testimonial_profession_meta_field',
+			$testimonial_profession
+		);
+	}
+}
+add_action('save_post', 'yuri_lucas_save_testimonial_postdata');
+
+
+/**
+ * Services Custom Fields.
+ */
+function yuri_lucas_add_service_custom_field()
+{
+	$screens = ['services'];
+	foreach ($screens as $screen) {
+		add_meta_box(
+			'yuri_lucas_box_id',                 // Unique ID
+			'Service Details',      // Box title
+			'yuri_lucas_service_custom_field_html',  // Content callback, must be of type callable
+			$screen                            // Post type
+		);
+	}
+}
+add_action('add_meta_boxes', 'yuri_lucas_add_service_custom_field');
+
+/**
+ * Services Custom Fields HTML.
+ */
+function yuri_lucas_service_custom_field_html($post)
+{
+	wp_nonce_field('yuri_lucas_save_postdata', 'service_meta_box_nonce');
+	$service = get_post_meta($post->ID, '_service_profession_meta_field', true);
+		?>
+		<label for="yuri_lucas_service_field">Service Icon (https://fontawesomeicons.com/bootstrap/icons/)</label>
+		<input type="text" placeholder="bi-briefcase" name="yuri_lucas_service_field" id="yuri_lucas_service_field" class="postbox" value="<?php echo esc_attr($service) ?>">
+
+		<?php
+}
+
+/**
+ * Services Custom Fields Save.
+ */
+function yuri_lucas_save_service_postdata($post_id)
+{
+	if (!isset($_POST['service_meta_box_nonce'])) {
+		return;
+	}
+
+	if (!wp_verify_nonce($_POST['service_meta_box_nonce'], 'yuri_lucas_save_postdata')) {
+		return;
+	}
+
+	if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+		return;
+	}
+	if (array_key_exists('yuri_lucas_service_field', $_POST)) {
+		$service = sanitize_text_field($_POST['yuri_lucas_service_field']);
+		update_post_meta(
+			$post_id,
+			'_service_meta_field',
+			$service
+		);
+	}
+}
+add_action('save_post', 'yuri_lucas_save_service_postdata');

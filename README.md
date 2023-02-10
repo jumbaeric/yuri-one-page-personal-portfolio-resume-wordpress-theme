@@ -1,43 +1,24 @@
-## them.es Starter Theme
+== Description ==
+Yuri one page personal portfolio / cv resume WordPress theme is a wordpress theme built for  Designer, Developer, Programmer, Freelancer, Artist, Photographer & Can be use for CV Resume website. Modern and creative
 
-**them.es Starter** is a WordPress Starter Theme built with Bootstrap. Please note that the Source files are only recommended for WordPress Developers who are searching for a simple, solid, proved and tested **Bootstrap Starter Theme** to build upon. **_Don't_ expect a ready-to-use WordPress Theme!**
+* Bootstrap Theme
+* Responsive Layout
+* Customization
 
-If you want to see it in action or want to download a customized Theme for free, check out [https://them.es/starter-bootstrap](https://them.es/starter-bootstrap)
+== Installation ==
 
+1. In your admin panel, go to Appearance -> Themes and click the Add New button.
+2. Click Upload and Choose File, then select the theme's ZIP file. Click Install Now.
+3. Click Activate to use your new theme right away.
 
-## What's included?
-* WordPress Theme
-* Bootstrap Framework
-* Sass Source files
-* gulp + webpack configuration
-* NPM configuration to keep the required build libraries updated and to add new libraries
-* Customization API
-* 2 Menus
-* Demo Content
+== Frequently Asked Questions ==
 
+= How do I change the Theme settings? =
 
-## Task Automation
-This Theme comes with a built in gulp/webpack task automation. Sass files will be compiled if changed, vendor prefixes will be added automatically and the CSS will be minified. JS source files will be bundled and minified.
+You can change the settings of your site easily.
 
-* Prerequisites: [Node.js](https://nodejs.org) (NPM) needs to be installed on your system
-* Open the **Project directory** `/` in Terminal and install the required Node.js dependencies: gulp, webpack, Sass-Compiler, Autoprefixer, etc.
-* `$ npm install`
-* Run the **`watch`** script
-* `$ npm run watch`
-* Modify `/assets/main.scss` and `/assets/main.js`
-
-
-## Technology
-
-* [Bootstrap](https://github.com/twbs/bootstrap), [MIT license](https://github.com/twbs/bootstrap/blob/master/LICENSE)
-* [Sass](https://github.com/sass/sass), [MIT license](https://github.com/sass/sass/blob/stable/MIT-LICENSE)
-* [gulp](https://github.com/gulpjs/gulp), [MIT license](https://github.com/gulpjs/gulp/blob/master/LICENSE)
-* [webpack](https://github.com/webpack/webpack), [MIT license](https://github.com/webpack/webpack/blob/master/LICENSE)
-* [wp-bootstrap-navwalker](https://github.com/twittem/wp-bootstrap-navwalker), [GPLv2+](https://github.com/twittem/wp-bootstrap-navwalker/blob/master/LICENSE.txt)
-
-
-## Copyright & License
-
-Code and Documentation &copy; [them.es](https://them.es)
-
-Code released under [GPLv2+](https://www.gnu.org/licenses/gpl-2.0.html)
+1. In your admin panel, go to Appearance -> Customize.
+2. Now you will see the Customizer
+3. You can now change your color scheme by selecting one of the predefined ones. Choose a color scheme you want from Base Color Scheme dropdown. You can preview the change in the Customizer.
+4. Should you wish to create your own color scheme or modify an existing one, you can by selecting the colors for each area listed.
+5. Once you are happy with your color changes you can click save and your changes will be reflected on your live site.

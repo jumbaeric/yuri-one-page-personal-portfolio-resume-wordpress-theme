@@ -65,7 +65,7 @@ class Post_Type_Dropdown_Custom_Control extends WP_Customize_Control
 		<label class="customize-control-title">
 			<span class="customize-post-type-dropdown"><?php echo esc_html($this->label); ?></span>
 			<select multiple name="<?php echo $this->id; ?>" id="<?php echo $this->id; ?>">
-				<?php foreach ($post_types_arr as $post ) : ?>
+				<?php foreach ($post_types_arr as $post) : ?>
 					<option value="<?php echo $post->ID; ?>" <?php selected($this->value(), $post->ID); ?>><?php echo $post->post_title; ?></option>
 				<?php endforeach; ?>
 			</select>
@@ -261,7 +261,7 @@ function yuri_lucas_customize($wp_customize)
 	$wp_customize->add_section(
 		'yuri_lucas_home_page_section_2',
 		array(
-			'title'         => __('Home Section 2 Content', 'yuri-lucas'),
+			'title'         => __('Home Section 2', 'yuri-lucas'),
 			'panel' => 'homepage',
 			'priority'      => 2
 		)
@@ -940,7 +940,7 @@ function yuri_lucas_customize($wp_customize)
 	$wp_customize->add_section(
 		'yuri_lucas_home_page_section_3',
 		array(
-			'title'         => __('Home Section 3 Content', 'yuri-lucas'),
+			'title'         => __('Home Section 3', 'yuri-lucas'),
 			'panel' => 'homepage',
 			'priority'      => 2
 		)
@@ -1281,11 +1281,11 @@ function yuri_lucas_customize($wp_customize)
 		'priority' => 1
 	)));
 
-	// Home Page Section 3 
+	// Home Page Section 4 
 	$wp_customize->add_section(
 		'yuri_lucas_home_page_section_4',
 		array(
-			'title'         => __('Home Section 4 Content', 'yuri-lucas'),
+			'title'         => __('Home Section 4', 'yuri-lucas'),
 			'panel' => 'homepage',
 			'priority'      => 2
 		)
@@ -1319,15 +1319,220 @@ function yuri_lucas_customize($wp_customize)
 		'priority' => 1,
 	));
 
-	$wp_customize->add_setting('post_type_dropdown_setting', array(
-		'default'        => '',
+
+	// Home Page Section 5 
+	$wp_customize->add_section(
+		'yuri_lucas_home_page_section_5',
+		array(
+			'title'         => __('Home Section 5', 'yuri-lucas'),
+			'panel' => 'homepage',
+			'priority'      => 2
+		)
+	);
+
+	// section 5 title 1
+	$wp_customize->add_setting("section_5_title_1", array(
+		"default" => "Services",
+		'sanitize_callback' => 'sanitize_text_field',
+		"transport" => "postMessage",
 	));
-	$wp_customize->add_control(new Post_Type_Dropdown_Custom_Control($wp_customize, 'post_type_dropdown_setting', array(
-		'label'   => 'Select Portfolio',
-		'section' => 'yuri_lucas_home_page_section_4',
-		'settings'   => 'post_type_dropdown_setting',
-		'priority' => 1
-	)));
+	$wp_customize->add_control('section_5_title_1', array( // setting id
+		'label'    => __('Title', 'yuri-lucas'),
+		'section'  => 'yuri_lucas_home_page_section_5', // section id
+		'settings' => 'section_5_title_1',
+		'type'     => 'text',
+		'priority' => 1,
+	));
+
+	// section 5 description 1
+	$wp_customize->add_setting("section_5_title_1_description", array(
+		"default" => "Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.",
+		'sanitize_callback' => 'sanitize_text_field',
+		"transport" => "postMessage",
+	));
+	$wp_customize->add_control('section_5_title_1_description', array( // setting id
+		'label'    => __('Description', 'yuri-lucas'),
+		'section'  => 'yuri_lucas_home_page_section_5', // section id
+		'settings' => 'section_5_title_1_description',
+		'type'     => 'textarea',
+		'priority' => 1,
+	));
+
+	// Home Page Section 6 
+	$wp_customize->add_section(
+		'yuri_lucas_home_page_section_6',
+		array(
+			'title'         => __('Home Section 6', 'yuri-lucas'),
+			'panel' => 'homepage',
+			'priority'      => 2
+		)
+	);
+
+	// section 6 title 1
+	$wp_customize->add_setting("section_6_title_1", array(
+		"default" => "Testimonials",
+		'sanitize_callback' => 'sanitize_text_field',
+		"transport" => "postMessage",
+	));
+	$wp_customize->add_control('section_6_title_1', array( // setting id
+		'label'    => __('Title', 'yuri-lucas'),
+		'section'  => 'yuri_lucas_home_page_section_6', // section id
+		'settings' => 'section_6_title_1',
+		'type'     => 'text',
+		'priority' => 1,
+	));
+
+	// section 6 description 1
+	$wp_customize->add_setting("section_6_title_1_description", array(
+		"default" => "Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.",
+		'sanitize_callback' => 'sanitize_text_field',
+		"transport" => "postMessage",
+	));
+	$wp_customize->add_control('section_6_title_1_description', array( // setting id
+		'label'    => __('Description', 'yuri-lucas'),
+		'section'  => 'yuri_lucas_home_page_section_6', // section id
+		'settings' => 'section_6_title_1_description',
+		'type'     => 'textarea',
+		'priority' => 1,
+	));
+
+	// Home Page Section 7 
+	$wp_customize->add_section(
+		'yuri_lucas_home_page_section_7',
+		array(
+			'title'         => __('Home Section 7', 'yuri-lucas'),
+			'panel' => 'homepage',
+			'priority'      => 2
+		)
+	);
+
+	// section 7 title 1
+	$wp_customize->add_setting("section_7_title_1", array(
+		"default" => "Contact",
+		'sanitize_callback' => 'sanitize_text_field',
+		"transport" => "postMessage",
+	));
+	$wp_customize->add_control('section_7_title_1', array( // setting id
+		'label'    => __('Title', 'yuri-lucas'),
+		'section'  => 'yuri_lucas_home_page_section_7', // section id
+		'settings' => 'section_7_title_1',
+		'type'     => 'text',
+		'priority' => 1,
+	));
+
+	// section 7 description 1
+	$wp_customize->add_setting("section_7_title_1_description", array(
+		"default" => "Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.",
+		'sanitize_callback' => 'sanitize_text_field',
+		"transport" => "postMessage",
+	));
+	$wp_customize->add_control('section_7_title_1_description', array( // setting id
+		'label'    => __('Description', 'yuri-lucas'),
+		'section'  => 'yuri_lucas_home_page_section_7', // section id
+		'settings' => 'section_7_title_1_description',
+		'type'     => 'textarea',
+		'priority' => 1,
+	));
+
+	// section 7 Contact Location
+	$wp_customize->add_setting("section_7_contact_location_text", array(
+		"default" => "Location",
+		'sanitize_callback' => 'sanitize_text_field',
+		"transport" => "postMessage",
+	));
+	$wp_customize->add_control('section_7_contact_location_text', array( // setting id
+		'label'    => __('Location Text', 'yuri-lucas'),
+		'section'  => 'yuri_lucas_home_page_section_7', // section id
+		'settings' => 'section_7_contact_location_text',
+		'type'     => 'text',
+		'priority' => 1,
+	));
+	$wp_customize->add_setting("section_7_contact_location", array(
+		"default" => "Muthithi Rd, Westlands",
+		'sanitize_callback' => 'sanitize_text_field',
+		"transport" => "postMessage",
+	));
+	$wp_customize->add_control('section_7_contact_location', array( // setting id
+		'label'    => __('Location', 'yuri-lucas'),
+		'section'  => 'yuri_lucas_home_page_section_7', // section id
+		'settings' => 'section_7_contact_location',
+		'type'     => 'text',
+		'priority' => 1,
+	));
+
+	// section 7 Contact Email
+	$wp_customize->add_setting("section_7_contact_email_text", array(
+		"default" => "Email",
+		'sanitize_callback' => 'sanitize_text_field',
+		"transport" => "postMessage",
+	));
+	$wp_customize->add_control('section_7_contact_email_text', array( // setting id
+		'label'    => __('Email Text', 'yuri-lucas'),
+		'section'  => 'yuri_lucas_home_page_section_7', // section id
+		'settings' => 'section_7_contact_email_text',
+		'type'     => 'text',
+		'priority' => 1,
+	));
+	$wp_customize->add_setting("section_7_contact_email", array(
+		"default" => "jumbaeric@gmail.com",
+		'sanitize_callback' => 'sanitize_text_field',
+		"transport" => "postMessage",
+	));
+	$wp_customize->add_control('section_7_contact_email', array( // setting id
+		'label'    => __('Email', 'yuri-lucas'),
+		'section'  => 'yuri_lucas_home_page_section_7', // section id
+		'settings' => 'section_7_contact_email',
+		'type'     => 'text',
+		'priority' => 1,
+	));
+
+	// section 7 Contact Phone
+	$wp_customize->add_setting("section_7_contact_phone_text", array(
+		"default" => "Phone",
+		'sanitize_callback' => 'sanitize_text_field',
+		"transport" => "postMessage",
+	));
+	$wp_customize->add_control('section_7_contact_phone_text', array( // setting id
+		'label'    => __('Phone Text', 'yuri-lucas'),
+		'section'  => 'yuri_lucas_home_page_section_7', // section id
+		'settings' => 'section_7_contact_phone_text',
+		'type'     => 'text',
+		'priority' => 1,
+	));
+	$wp_customize->add_setting("section_7_contact_phone", array(
+		"default" => "(254) 723 777 618",
+		'sanitize_callback' => 'sanitize_text_field',
+		"transport" => "postMessage",
+	));
+	$wp_customize->add_control('section_7_contact_phone', array( // setting id
+		'label'    => __('Phone', 'yuri-lucas'),
+		'section'  => 'yuri_lucas_home_page_section_7', // section id
+		'settings' => 'section_7_contact_phone',
+		'type'     => 'text',
+		'priority' => 1,
+	));
+
+	$wp_customize->add_setting("section_7_contact_map", array(
+		"default" => "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12097.433213460943!2d-74.0062269!3d40.7101282!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xb89d1fe6bc499443!2sDowntown+Conference+Center!5e0!3m2!1smk!2sbg!4v1539943755621",
+		'sanitize_callback' => 'sanitize_text_field',
+		"transport" => "postMessage",
+	));
+	$wp_customize->add_control('section_7_contact_map', array( // setting id
+		'label'    => __('Google Maps Iframe', 'yuri-lucas'),
+		'section'  => 'yuri_lucas_home_page_section_7', // section id
+		'settings' => 'section_7_contact_map',
+		'type'     => 'textarea',
+		'priority' => 1,
+	));
+	// $wp_customize->add_setting('post_type_dropdown_setting', array(
+	// 	'default'        => '',
+	// ));
+	// $wp_customize->add_control(new Post_Type_Dropdown_Custom_Control($wp_customize, 'post_type_dropdown_setting', array(
+	// 	'label'   => 'Select Portfolio',
+	// 	'section' => 'yuri_lucas_home_page_section_4',
+	// 	'settings'   => 'post_type_dropdown_setting',
+	// 	'priority' => 1
+	// )));
 }
 add_action('customize_register', 'yuri_lucas_customize');
 
