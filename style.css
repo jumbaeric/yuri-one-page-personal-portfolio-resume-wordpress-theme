@@ -78,6 +78,31 @@ h6 {
   opacity: 1;
 }
 
+/* color scheme */
+.bg-light {
+    color: black !important;
+}
+
+.bg-light .credits{
+    color: black !important;
+}
+
+.bg-light .profile h1 a, .bg-light .profile h1 a:hover {
+	color: #040b14 !important;
+}
+
+.bg-light a.nav-link {
+    color: black;
+}
+
+.bg-primary {
+	background-color: #149ddd !important;
+}
+
+.bg-primary a.nav-link {
+    color: white;
+}
+
 /*--------------------------------------------------------------
   # Header
   --------------------------------------------------------------*/
@@ -87,6 +112,7 @@ h6 {
   left: 0;
   bottom: 0;
   width: 300px;
+  /* width: auto; */
   transition: all ease-in-out 0.5s;
   z-index: 9997;
   transition: all 0.5s;

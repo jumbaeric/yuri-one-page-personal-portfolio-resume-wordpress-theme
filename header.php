@@ -37,7 +37,7 @@ $github  = get_theme_mod('contact_section_github', '#'); // Get custom meta-valu
 	<i class="bi bi-list mobile-nav-toggle d-xl-none"></i>
 
 	<!-- ======= Header ======= -->
-	<header id="header">
+	<header id="header" class="<?php echo esc_attr($navbar_scheme) ?>">
 		<div class="d-flex flex-column">
 
 			<div class="profile">
