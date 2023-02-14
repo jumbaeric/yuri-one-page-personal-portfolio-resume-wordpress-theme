@@ -20,6 +20,13 @@ $navbar_scheme   = get_theme_mod('navbar_scheme', 'navbar-light bg-light'); // G
 $navbar_position = get_theme_mod('navbar_position', 'static'); // Get custom meta-value.
 
 $search_enabled  = get_theme_mod('search_enabled', '1'); // Get custom meta-value.
+
+$twitter  = get_theme_mod('contact_section_twitter', '#'); // Get custom meta-value.
+$facebook  = get_theme_mod('contact_section_faceook', '#'); // Get custom meta-value.
+$instagram  = get_theme_mod('contact_section_instagram', '#'); // Get custom meta-value.
+$youtube  = get_theme_mod('contact_section_youtube', '#'); // Get custom meta-value.
+$linkedin  = get_theme_mod('contact_section_linkedin', '#'); // Get custom meta-value.
+$github  = get_theme_mod('contact_section_github', '#'); // Get custom meta-value.
 ?>
 
 <body <?php body_class(); ?>>
@@ -49,11 +56,12 @@ $search_enabled  = get_theme_mod('search_enabled', '1'); // Get custom meta-valu
 					</a>
 				</h1>
 				<div class="social-links mt-3 text-center">
-					<a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-					<a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-					<a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-					<a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-					<a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+					<?php if (isset($twitter) && $twitter != "#") : ?><a href="<?php echo esc_url($twitter); ?>" class="twitter"><i class="bx bxl-twitter"></i></a> <?php endif; ?>
+					<?php if (isset($facebook) && $facebook != "#") : ?><a href="<?php echo esc_url($facebook); ?>" class="facebook"><i class="bx bxl-facebook"></i></a> <?php endif; ?>
+					<?php if (isset($instagram) && $instagram != "#") : ?><a href="<?php echo esc_url($instagram); ?>" class="instagram"><i class="bx bxl-instagram"></i></a> <?php endif; ?>
+					<?php if (isset($youtube) && $youtube != "#") : ?><a href="<?php echo esc_url($youtube); ?>" class="google-plus"><i class="bx bxl-youtube"></i></a> <?php endif; ?>
+					<?php if (isset($linkedin) && $linkedin != "#") : ?><a href="<?php echo esc_url($linkedin); ?>" class="linkedin"><i class="bx bxl-linkedin"></i></a> <?php endif; ?>
+					<?php if (isset($github) && $github != "#") : ?><a href="<?php echo esc_url($github); ?>" class="linkedin"><i class="bx bxl-github"></i></a> <?php endif; ?>
 				</div>
 			</div>
 
@@ -84,10 +92,23 @@ $search_enabled  = get_theme_mod('search_enabled', '1'); // Get custom meta-valu
 
 	<?php if (is_home() || is_front_page()) : ?>
 		<!-- ======= Hero Section ======= -->
-		<section id="hero" class="d-flex flex-column justify-content-center align-items-center" style="background: url(<?php echo get_theme_mod('upload_hero_image', get_template_directory_uri().'/assets/img/hero-img.jpg') ?>) top center">
+		<style>
+			#hero {
+				background: url(<?php echo esc_url(get_theme_mod('upload_hero_image', get_template_directory_uri() . '/assets/img/hero-img.jpg')) ?>) top center;
+				background-size: cover;
+			}
+
+			@media (min-width: 1024px) {
+				#hero {
+					background-attachment: fixed;
+				}
+			}
+		</style>
+		<section id="hero" class="d-flex flex-column justify-content-center align-items-center">
 			<div class="hero-container" data-aos="fade-in">
-				<h1><?php echo get_theme_mod('resume_names', 'Yuri Lucas') ?></h1>
-				<p>I'm a <span class="typed" data-typed-items="<?php echo get_theme_mod('resume_skills', 'Designer, Developer, Freelancer, Photographer') ?>"></span></p>
+				<h1><?php echo esc_html(get_theme_mod('resume_names', 'Yuri Lucas')) ?></h1>
+				<p>I'm a <span class="typed" data-typed-items="<?php echo esc_attr(get_theme_mod('resume_skills', 'Designer, Developer, Freelancer, Photographer')) ?>"></span>
+				</p>
 			</div>
 		</section><!-- End Hero -->
 	<?php endif; ?>
@@ -102,10 +123,18 @@ $search_enabled  = get_theme_mod('search_enabled', '1'); // Get custom meta-valu
 					<div class="d-flex justify-content-between align-items-center">
 						<h2><?php the_title(); ?></h2>
 						<ol>
-							<li><a href="<?php echo home_url() ?>">Home</a></li>
-							<?php if (is_category() || is_single()): echo "<li>"; the_category(' &bull; ');  echo "</li>";?>
-							<?php if (is_single()): echo "<li>"; the_title(); echo "</li>"; endif;?>
-							<?php elseif (is_page()): echo "<li>"; the_title(); echo "</li>"; endif;?>
+							<li><a href="<?php echo esc_url(home_url()) ?>">Home</a></li>
+							<?php if (is_category() || is_single()) : echo "<li>";
+								the_category(' &bull; ');
+								echo "</li>"; ?>
+								<?php if (is_single()) : echo "<li>";
+									the_title();
+									echo "</li>";
+								endif; ?>
+							<?php elseif (is_page()) : echo "<li>";
+								the_title();
+								echo "</li>";
+							endif; ?>
 							<!-- <li>Inner Page</li> -->
 						</ol>
 					</div>

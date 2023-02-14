@@ -1117,8 +1117,58 @@ body {
 	}
   }
 
+  /* image */
   img.attachment-large.size-large.wp-post-image {
     object-fit: contain;
     max-width: 100%;
     max-height: 100%;
 }
+
+figcaption,
+.wp-caption,
+.wp-caption-text,
+.wp-block-embed figcaption {
+	color: currentColor;
+	font-size: var(--global--font-size-xs);
+	line-height: var(--global--line-height-body);
+	margin-top: calc(0.5 * var(--global--spacing-unit));
+	margin-bottom: var(--global--spacing-unit);
+	text-align: center;
+}
+
+.screen-reader-text {
+	border: 0;
+	clip: rect(1px, 1px, 1px, 1px);
+	-webkit-clip-path: inset(50%);
+	clip-path: inset(50%);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute !important;
+	width: 1px;
+	word-wrap: normal !important;
+	word-break: normal;
+}
+
+.gallery-caption {
+	display: block;
+}
+
+.bypostauthor{
+	display: block;
+}
+
+.alignright{
+	text-align: right;
+}
+
+.alignleft{
+	text-align: left;
+}
+
+.aligncenter{
+	text-align: center;
+}
+
+

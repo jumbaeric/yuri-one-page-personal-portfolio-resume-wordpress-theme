@@ -199,19 +199,16 @@ if ( ! class_exists( 'WP_Bootstrap_Navwalker' ) ) {
 				$menu_class      = $args['menu_class'];
 				$menu_id         = $args['menu_id'];
 
-				$output = '';
-
 				if ( $container ) {
-					$output .= '<' . esc_attr( $container ) . ( $container_id ? ' id="' . esc_attr( $container_id ) . '"' : '' ) . ( $container_class ? ' class="' . esc_attr( $container_class ) . '"' : '' ) . '>';
+					echo '<' . esc_attr( $container ) . ( $container_id ? ' id="' . esc_attr( $container_id ) . '"' : '' ) . ( $container_class ? ' class="' . esc_attr( $container_class ) . '"' : '' ) . '>';
 				}
-				$output .= '<ul' . ( $menu_id ? ' id="' . esc_attr( $menu_id ) . '"' : '' ) . ( $menu_class ? ' class="' . esc_attr( $menu_class ) . '"' : '' ) . '>';
-					$output .= '<li><a href="' . esc_url( admin_url( 'nav-menus.php' ) ) . '" title="">' . esc_html__( 'Add a menu', 'yuri-lucas' ) . '</a></li>';
-				$output .= '</ul>';
+				echo '<ul' . ( $menu_id ? ' id="' . esc_attr( $menu_id ) . '"' : '' ) . ( $menu_class ? ' class="' . esc_attr( $menu_class ) . '"' : '' ) . '>';
+					echo '<li><a href="' . esc_url( admin_url( 'nav-menus.php' ) ) . '" title="Add a menu">' . esc_html__( 'Add a menu', 'yuri-lucas' ) . '</a></li>';
+				echo '</ul>';
 				if ( $container ) {
-					$output .= '</' . esc_attr( $container ) . '>';
+					echo '</' . esc_attr( $container ) . '>';
 				}
 
-				echo $output;
 			}
 		}
 	}

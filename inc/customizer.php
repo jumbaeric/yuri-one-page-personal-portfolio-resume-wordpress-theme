@@ -64,9 +64,9 @@ class Post_Type_Dropdown_Custom_Control extends WP_Customize_Control
 	?>
 		<label class="customize-control-title">
 			<span class="customize-post-type-dropdown"><?php echo esc_html($this->label); ?></span>
-			<select multiple name="<?php echo $this->id; ?>" id="<?php echo $this->id; ?>">
+			<select multiple name="<?php echo esc_attr($this->id); ?>" id="<?php echo esc_attr($this->id); ?>">
 				<?php foreach ($post_types_arr as $post) : ?>
-					<option value="<?php echo $post->ID; ?>" <?php selected($this->value(), $post->ID); ?>><?php echo $post->post_title; ?></option>
+					<option value="<?php echo esc_attr($post->ID); ?>" <?php selected($this->value(), $post->ID); ?>><?php echo esc_html($post->post_title); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</label>
@@ -195,7 +195,7 @@ function yuri_lucas_customize($wp_customize)
 
 	// Homepage Panel
 	$wp_customize->add_panel('homepage', array(
-		'title' => __('Homepage Content'),
+		'title' => __('One Page', 'yuri-lucas'),
 		'description' => "Home Onepage Content", // Include html tags such as <p>.
 		'priority' => 2, // Mixed with top-level-section hierarchy.
 	));
@@ -1219,7 +1219,7 @@ function yuri_lucas_customize($wp_customize)
 	// section 3 Experience 1 Description
 	$wp_customize->add_setting("section_3_experience_1_description", array(
 		"default" => "Qui deserunt veniam. Et sed aliquam labore tempore sed quisquam iusto autem sit. Ea vero voluptatum qui ut dignissimos deleniti nerada porti sand markend",
-		// 'sanitize_callback' => 'sanitize_text_field',
+		'sanitize_callback' => 'sanitize_text_field',
 		"transport" => "postMessage",
 	));
 	$wp_customize->add_control(new Text_Editor_Custom_Control($wp_customize, 'section_3_experience_1_description', array(
@@ -1271,7 +1271,7 @@ function yuri_lucas_customize($wp_customize)
 	// section 3 Experience 2 Description
 	$wp_customize->add_setting("section_3_experience_2_description", array(
 		"default" => "Qui deserunt veniam. Et sed aliquam labore tempore sed quisquam iusto autem sit. Ea vero voluptatum qui ut dignissimos deleniti nerada porti sand markend",
-		// 'sanitize_callback' => 'sanitize_text_field',
+		'sanitize_callback' => 'sanitize_text_field',
 		"transport" => "postMessage",
 	));
 	$wp_customize->add_control(new Text_Editor_Custom_Control($wp_customize, 'section_3_experience_2_description', array(
@@ -1522,6 +1522,90 @@ function yuri_lucas_customize($wp_customize)
 		'section'  => 'yuri_lucas_home_page_section_7', // section id
 		'settings' => 'section_7_contact_map',
 		'type'     => 'textarea',
+		'priority' => 1,
+	));
+
+	/**
+	 * contact sections
+	 */
+	$wp_customize->add_section(
+		'theme_contact_section',
+		array(
+			'title'    => __('Contacts', 'yuri-lucas'),
+			'priority' => 1,
+		)
+	);
+	// contact 
+	$wp_customize->add_setting("contact_section_twitter", array(
+		"default" => "#",
+		'sanitize_callback' => 'sanitize_text_field',
+		"transport" => "postMessage",
+	));
+	$wp_customize->add_control('contact_section_twitter', array( // setting id
+		'label'    => __('Twitter', 'yuri-lucas'),
+		'section'  => 'theme_contact_section', // section id
+		'settings' => 'contact_section_twitter',
+		'type'     => 'text',
+		'priority' => 1,
+	));
+	$wp_customize->add_setting("contact_section_facebook", array(
+		"default" => "#",
+		'sanitize_callback' => 'sanitize_text_field',
+		"transport" => "postMessage",
+	));
+	$wp_customize->add_control('contact_section_facebook', array( // setting id
+		'label'    => __('Facebook', 'yuri-lucas'),
+		'section'  => 'theme_contact_section', // section id
+		'settings' => 'contact_section_facebook',
+		'type'     => 'text',
+		'priority' => 1,
+	));
+	$wp_customize->add_setting("contact_section_instagram", array(
+		"default" => "#",
+		'sanitize_callback' => 'sanitize_text_field',
+		"transport" => "postMessage",
+	));
+	$wp_customize->add_control('contact_section_instagram', array( // setting id
+		'label'    => __('Instagram', 'yuri-lucas'),
+		'section'  => 'theme_contact_section', // section id
+		'settings' => 'contact_section_instagram',
+		'type'     => 'text',
+		'priority' => 1,
+	));
+	$wp_customize->add_setting("contact_section_youtube", array(
+		"default" => "#",
+		'sanitize_callback' => 'sanitize_text_field',
+		"transport" => "postMessage",
+	));
+	$wp_customize->add_control('contact_section_youtube', array( // setting id
+		'label'    => __('Youtube', 'yuri-lucas'),
+		'section'  => 'theme_contact_section', // section id
+		'settings' => 'contact_section_youtube',
+		'type'     => 'text',
+		'priority' => 1,
+	));
+	$wp_customize->add_setting("contact_section_linkedin", array(
+		"default" => "#",
+		'sanitize_callback' => 'sanitize_text_field',
+		"transport" => "postMessage",
+	));
+	$wp_customize->add_control('contact_section_linkedin', array( // setting id
+		'label'    => __('LinkedIn', 'yuri-lucas'),
+		'section'  => 'theme_contact_section', // section id
+		'settings' => 'contact_section_linkedin',
+		'type'     => 'text',
+		'priority' => 1,
+	));
+	$wp_customize->add_setting("contact_section_github", array(
+		"default" => "#",
+		'sanitize_callback' => 'sanitize_text_field',
+		"transport" => "postMessage",
+	));
+	$wp_customize->add_control('contact_section_github', array( // setting id
+		'label'    => __('Github', 'yuri-lucas'),
+		'section'  => 'theme_contact_section', // section id
+		'settings' => 'contact_section_github',
+		'type'     => 'text',
 		'priority' => 1,
 	));
 	// $wp_customize->add_setting('post_type_dropdown_setting', array(

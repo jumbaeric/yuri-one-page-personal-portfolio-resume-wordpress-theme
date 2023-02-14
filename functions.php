@@ -93,7 +93,7 @@ if (!function_exists('wp_body_open')) {
 	}
 }
 
-if (!function_exists('yuri_lucas_add_user_fields')) {
+// if (!function_exists('yuri_lucas_add_user_fields')) {
 	/**
 	 * Add new User fields to Userprofile:
 	 * get_user_meta( $user->ID, 'facebook_profile', true );
@@ -104,19 +104,18 @@ if (!function_exists('yuri_lucas_add_user_fields')) {
 	 *
 	 * @return array
 	 */
-	function yuri_lucas_add_user_fields($fields)
-	{
-		// Add new fields.
-		$fields['facebook_profile'] = 'Facebook URL';
-		$fields['twitter_profile']  = 'Twitter URL';
-		$fields['linkedin_profile'] = 'LinkedIn URL';
-		$fields['xing_profile']     = 'Xing URL';
-		$fields['github_profile']   = 'GitHub URL';
+// 	function yuri_lucas_add_user_fields($fields)
+// 	{
+// 		$fields['facebook_profile'] = 'Facebook URL';
+// 		$fields['twitter_profile']  = 'Twitter URL';
+// 		$fields['linkedin_profile'] = 'LinkedIn URL';
+// 		$fields['xing_profile']     = 'Xing URL';
+// 		$fields['github_profile']   = 'GitHub URL';
 
-		return $fields;
-	}
-	add_filter('user_contactmethods', 'yuri_lucas_add_user_fields');
-}
+// 		return $fields;
+// 	}
+// 	add_filter('user_contactmethods', 'yuri_lucas_add_user_fields');
+// }
 
 /**
  * Test if a page is a blog page.
@@ -374,7 +373,7 @@ if (!function_exists('yuri_lucas_comment')) {
 				<li class="post pingback">
 					<p>
 						<?php
-						esc_html_e('Pingback:', 'yuri-lucas');
+						esc_attr_e('Pingback:', 'yuri-lucas');
 						comment_author_link();
 						edit_comment_link(esc_html__('Edit', 'yuri-lucas'), '<span class="edit-link">', '</span>');
 						?>
@@ -410,7 +409,7 @@ if (!function_exists('yuri_lucas_comment')) {
 
 							<?php if ('0' === $comment->comment_approved) { ?>
 								<em class="comment-awaiting-moderation">
-									<?php esc_html_e('Your comment is awaiting moderation.', 'yuri-lucas'); ?>
+									<?php esc_attr_e('Your comment is awaiting moderation.', 'yuri-lucas'); ?>
 								</em>
 								<br />
 							<?php } ?>
@@ -577,541 +576,47 @@ function yuri_lucas_scripts_loader()
 	if (is_singular() && comments_open() && get_option('thread_comments')) {
 		wp_enqueue_script('comment-reply');
 	}
+
+	wp_register_script('ajax_object', '');
+	wp_add_inline_script('ajax_object', "var ajax_url = '" . admin_url('admin-ajax.php') . "', _ajax_nonce = '" . wp_create_nonce('_ajax_nonce') . "';");
+	wp_enqueue_script('ajax_object');
+
+	// $translation_array = array(
+	// 	'ajax_url' => admin_url('admin-ajax.php'),
+	// 	'_ajax_nonce' => wp_create_nonce('_ajax_nonce'),
+	// );
+	// wp_localize_script('script', 'ajax_object', $translation_array);
 }
 add_action('wp_enqueue_scripts', 'yuri_lucas_scripts_loader');
 
-/**
- * Portfolio Custom post Type.
- */
-function yuri_lucas_custom_post_type()
+// send contact email
+function send_contact_email()
 {
-	register_post_type(
-		'portfolios',
-		array(
-			'labels'      => array(
-				'name'          => __('Portfolios', 'yuri-lucas'),
-				'singular_name' => __('Portfolio', 'yuri-lucas'),
-			),
-			'public'      => true,
-			'has_archive' => true,
-			'rewrite'     => array('slug' => 'portfolios'), // my custom slug
-			'show_in_rest' => true,
-			'supports' => array('title', 'editor', 'excerpt', 'custom-fields', 'thumbnail'),
-			'taxonomies' => array('category', 'post_tag'),
-		)
-	);
+	if (check_ajax_referer('_ajax_nonce')) {
+		$name = sanitize_text_field($_POST['name']);
+		$email = sanitize_email($_POST['email']);
+		$subject = sanitize_text_field($_POST['subject']);
+		$message = "<p>From Name: " . $name . "</p>";
+		$message .= "<p>From Email: " . $email . "</p>";
+		$message .= sanitize_textarea_field($_POST['message']);
+		$admin = get_option('admin_email');
 
-	register_post_type(
-		'services',
-		array(
-			'labels'      => array(
-				'name'          => __('Services', 'yuri-lucas'),
-				'singular_name' => __('Service', 'yuri-lucas'),
-			),
-			'public'      => true,
-			'has_archive' => true,
-			'rewrite'     => array('slug' => 'services'), // my custom slug
-			'show_in_rest' => true,
-			'supports' => array('title', 'editor', 'excerpt', 'custom-fields', 'thumbnail'),
-			'taxonomies' => array('category', 'post_tag'),
-		)
-	);
-
-	register_post_type(
-		'testimonials',
-		array(
-			'labels'      => array(
-				'name'          => __('Testimonials', 'yuri-lucas'),
-				'singular_name' => __('Testimonial', 'yuri-lucas'),
-			),
-			'public'      => true,
-			'has_archive' => true,
-			'rewrite'     => array('slug' => 'testimonials'), // my custom slug
-			'show_in_rest' => true,
-			'supports' => array('title', 'editor', 'excerpt', 'custom-fields', 'thumbnail'),
-		)
-	);
-}
-add_action('init', 'yuri_lucas_custom_post_type');
-
-/**
- * Portfolio Custom Fields.
- */
-function yuri_lucas_add_portfolio_custom_field()
-{
-	$screens = ['portfolios'];
-	foreach ($screens as $screen) {
-		add_meta_box(
-			'yuri_lucas_box_id',                 // Unique ID
-			'Portfolio Details',      // Box title
-			'yuri_lucas_portfolio_custom_field_html',  // Content callback, must be of type callable
-			$screen                            // Post type
-		);
-	}
-}
-add_action('add_meta_boxes', 'yuri_lucas_add_portfolio_custom_field');
-
-/**
- * Portfolio Custom Fields HTML.
- */
-function yuri_lucas_portfolio_custom_field_html($post)
-{
-	wp_nonce_field('yuri_lucas_save_postdata', 'portfolio_meta_box_nonce');
-	$client_name = get_post_meta($post->ID, '_client_meta_field', true);
-	$project_date = get_post_meta($post->ID, '_project_date_meta_field', true);
-	$project_url = get_post_meta($post->ID, '_project_url_meta_field', true);
-		?>
-		<label for="yuri_lucas_client_field">Client Name</label>
-		<input type="text" name="yuri_lucas_client_field" id="yuri_lucas_client_field" class="postbox" value="<?php echo esc_attr($client_name) ?>">
-
-		<label for="yuri_lucas_project_date_field">Project Date</label>
-		<input type="date" name="yuri_lucas_project_date_field" id="yuri_lucas_project_date_field" class="postbox" value="<?php echo esc_attr($project_date) ?>">
-
-		<label for="yuri_lucas_project_url_field">Project URL</label>
-		<input type="text" name="yuri_lucas_project_url_field" id="yuri_lucas_project_url_field" class="postbox" value="<?php echo esc_attr($project_url) ?>">
-	<?php
-}
-
-/**
- * Portfolio Custom Fields Save.
- */
-function yuri_lucas_save_portfolio_postdata($post_id)
-{
-	if (!isset($_POST['portfolio_meta_box_nonce'])) {
-		return;
-	}
-
-	if (!wp_verify_nonce($_POST['portfolio_meta_box_nonce'], 'yuri_lucas_save_postdata')) {
-		return;
-	}
-
-	if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-		return;
-	}
-	if (array_key_exists('yuri_lucas_client_field', $_POST)) {
-		$client_name = sanitize_text_field($_POST['yuri_lucas_client_field']);
-		update_post_meta(
-			$post_id,
-			'_client_meta_field',
-			$client_name
-		);
-	}
-
-	if (array_key_exists('yuri_lucas_project_date_field', $_POST)) {
-		$project_date = $_POST['yuri_lucas_project_date_field'];
-		update_post_meta(
-			$post_id,
-			'_project_date_meta_field',
-			$project_date
-		);
-	}
-
-	if (array_key_exists('yuri_lucas_project_url_field', $_POST)) {
-		$project_url = sanitize_text_field($_POST['yuri_lucas_project_url_field']);
-		update_post_meta(
-			$post_id,
-			'_project_url_meta_field',
-			$project_url
-		);
-	}
-}
-add_action('save_post', 'yuri_lucas_save_portfolio_postdata');
-
-
-/**
- * Testimonials Custom Fields.
- */
-function yuri_lucas_add_testimonial_custom_field()
-{
-	$screens = ['testimonials'];
-	foreach ($screens as $screen) {
-		add_meta_box(
-			'yuri_lucas_box_id',                 // Unique ID
-			'Testimonial Details',      // Box title
-			'yuri_lucas_testimonial_custom_field_html',  // Content callback, must be of type callable
-			$screen                            // Post type
-		);
-	}
-}
-add_action('add_meta_boxes', 'yuri_lucas_add_testimonial_custom_field');
-
-/**
- * Testimonials Custom Fields HTML.
- */
-function yuri_lucas_testimonial_custom_field_html($post)
-{
-	wp_nonce_field('yuri_lucas_save_postdata', 'testimonial_meta_box_nonce');
-	$testimonial_profession = get_post_meta($post->ID, '_testimonial_profession_meta_field', true);
-	?>
-		<label for="yuri_lucas_testimonial_profession_field">Profession / Job Title</label>
-		<input type="text" name="yuri_lucas_testimonial_profession_field" id="yuri_lucas_testimonial_profession_field" class="postbox" value="<?php echo esc_attr($testimonial_profession) ?>">
-
-	<?php
-}
-
-/**
- * Testimonials Custom Fields Save.
- */
-function yuri_lucas_save_testimonial_postdata($post_id)
-{
-	if (!isset($_POST['testimonial_meta_box_nonce'])) {
-		return;
-	}
-
-	if (!wp_verify_nonce($_POST['testimonial_meta_box_nonce'], 'yuri_lucas_save_postdata')) {
-		return;
-	}
-
-	if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-		return;
-	}
-	if (array_key_exists('yuri_lucas_testimonial_profession_field', $_POST)) {
-		$testimonial_profession = sanitize_text_field($_POST['yuri_lucas_testimonial_profession_field']);
-		update_post_meta(
-			$post_id,
-			'_testimonial_profession_meta_field',
-			$testimonial_profession
-		);
-	}
-}
-add_action('save_post', 'yuri_lucas_save_testimonial_postdata');
-
-
-/**
- * Services Custom Fields.
- */
-function yuri_lucas_add_service_custom_field()
-{
-	$screens = ['services'];
-	foreach ($screens as $screen) {
-		add_meta_box(
-			'yuri_lucas_box_id',                 // Unique ID
-			'Service Details',      // Box title
-			'yuri_lucas_service_custom_field_html',  // Content callback, must be of type callable
-			$screen                            // Post type
-		);
-	}
-}
-add_action('add_meta_boxes', 'yuri_lucas_add_service_custom_field');
-
-/**
- * Services Custom Fields HTML.
- */
-function yuri_lucas_service_custom_field_html($post)
-{
-	wp_nonce_field('yuri_lucas_save_postdata', 'service_meta_box_nonce');
-	$service = get_post_meta($post->ID, '_service_profession_meta_field', true);
-	?>
-		<label for="yuri_lucas_service_field">Service Icon (https://fontawesomeicons.com/bootstrap/icons/)</label>
-		<input type="text" placeholder="bi-briefcase" name="yuri_lucas_service_field" id="yuri_lucas_service_field" class="postbox" value="<?php echo esc_attr($service) ?>">
-
-	<?php
-}
-
-/**
- * Services Custom Fields Save.
- */
-function yuri_lucas_save_service_postdata($post_id)
-{
-	if (!isset($_POST['service_meta_box_nonce'])) {
-		return;
-	}
-
-	if (!wp_verify_nonce($_POST['service_meta_box_nonce'], 'yuri_lucas_save_postdata')) {
-		return;
-	}
-
-	if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-		return;
-	}
-	if (array_key_exists('yuri_lucas_service_field', $_POST)) {
-		$service = sanitize_text_field($_POST['yuri_lucas_service_field']);
-		update_post_meta(
-			$post_id,
-			'_service_meta_field',
-			$service
-		);
-	}
-}
-add_action('save_post', 'yuri_lucas_save_service_postdata');
-
-// Portfolio Gallery Meta Box
-function portfolio_gallery_add_metabox()
-{
-	add_meta_box(
-		'post_custom_gallery',
-		'Gallery',
-		'portfolio_gallery_metabox_callback',
-		'portfolios', // Change post type name
-		'normal',
-		'core'
-	);
-}
-add_action('admin_init', 'portfolio_gallery_add_metabox');
-
-// Portfolio Gallery Callback function
-function portfolio_gallery_metabox_callback()
-{
-	wp_nonce_field(basename(__FILE__), 'sample_nonce');
-	global $post;
-	$gallery_data = get_post_meta($post->ID, 'gallery_data', true);
-	?>
-		<div id="gallery_wrapper">
-			<div id="img_box_container">
-				<?php
-				if (isset($gallery_data['image_url'])) {
-					for ($i = 0; $i < count($gallery_data['image_url']); $i++) {
-				?>
-						<div class="gallery_single_row dolu">
-							<div class="gallery_area image_container ">
-								<img class="gallery_img_img" src="<?php esc_html_e($gallery_data['image_url'][$i]); ?>" height="55" width="55" onclick="open_media_uploader_image_this(this)" />
-								<input type="hidden" class="meta_image_url" name="gallery[image_url][]" value="<?php esc_html_e($gallery_data['image_url'][$i]); ?>" />
-							</div>
-							<div class="gallery_area">
-								<span class="button remove" onclick="remove_img(this)" title="Remove" /><i class="fas fa-trash-alt"></i></span>
-							</div>
-							<div class="clear" />
-						</div>
-			</div>
-	<?php
-					}
-				}
-	?>
-		</div>
-		<div style="display:none" id="master_box">
-			<div class="gallery_single_row">
-				<div class="gallery_area image_container" onclick="open_media_uploader_image(this)">
-					<input class="meta_image_url" value="" type="hidden" name="gallery[image_url][]" />
-				</div>
-				<div class="gallery_area">
-					<span class="button remove" onclick="remove_img(this)" title="Remove" /><i class="fas fa-trash-alt"></i></span>
-				</div>
-				<div class="clear"></div>
-			</div>
-		</div>
-		<div id="add_gallery_single_row">
-			<input class="button add" type="button" value="+" onclick="open_media_uploader_image_plus();" title="Add image" />
-		</div>
-		</div>
-	<?php
-}
-
-function portfolio_gallery_styles_scripts()
-{
-	global $post;
-	if ('portfolios' != $post->post_type)
-		return;
-	?>
-		<style type="text/css">
-			.gallery_area {
-				float: right;
-			}
-
-			.image_container {
-				float: left !important;
-				width: 100px;
-				background: url('https://i.hizliresim.com/dOJ6qL.png');
-				height: 100px;
-				background-repeat: no-repeat;
-				background-size: cover;
-				border-radius: 3px;
-				cursor: pointer;
-			}
-
-			.image_container img {
-				height: 100px;
-				width: 100px;
-				border-radius: 3px;
-			}
-
-			.clear {
-				clear: both;
-			}
-
-			#gallery_wrapper {
-				width: 100%;
-				height: auto;
-				position: relative;
-				display: inline-block;
-			}
-
-			#gallery_wrapper input[type=text] {
-				width: 300px;
-			}
-
-			#gallery_wrapper .gallery_single_row {
-				float: left;
-				display: inline-block;
-				width: 100px;
-				position: relative;
-				margin-right: 8px;
-				margin-bottom: 20px;
-			}
-
-			.dolu {
-				display: inline-block !important;
-			}
-
-			#gallery_wrapper label {
-				padding: 0 6px;
-			}
-
-			.button.remove {
-				background: none;
-				color: #f1f1f1;
-				position: absolute;
-				border: none;
-				top: 4px;
-				right: 7px;
-				font-size: 1.2em;
-				padding: 0px;
-				box-shadow: none;
-			}
-
-			.button.remove:hover {
-				background: none;
-				color: #fff;
-			}
-
-			.button.add {
-				background: #c3c2c2;
-				color: #ffffff;
-				border: none;
-				box-shadow: none;
-				width: 100px;
-				height: 100px;
-				line-height: 100px;
-				font-size: 4em;
-			}
-
-			.button.add:hover,
-			.button.add:focus {
-				background: #e2e2e2;
-				box-shadow: none;
-				color: #0f88c1;
-				border: none;
-			}
-		</style>
-		<script defer src="https://use.fontawesome.com/releases/v5.0.8/js/solid.js" integrity="sha384-+Ga2s7YBbhOD6nie0DzrZpJes+b2K1xkpKxTFFcx59QmVPaSA8c7pycsNaFwUK6l" crossorigin="anonymous">
-		</script>
-		<link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
-		<script defer src="https://use.fontawesome.com/releases/v5.0.8/js/fontawesome.js" integrity="sha384-7ox8Q2yzO/uWircfojVuCQOZl+ZZBg2D2J5nkpLqzH1HY0C1dHlTKIbpRz/LG23c" crossorigin="anonymous">
-		</script>
-		<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-		<script type="text/javascript">
-			function remove_img(value) {
-				var parent = jQuery(value).parent().parent();
-				parent.remove();
-			}
-			var media_uploader = null;
-
-			function open_media_uploader_image(obj) {
-				media_uploader = wp.media({
-					frame: "post",
-					state: "insert",
-					multiple: false
-				});
-				media_uploader.on("insert", function() {
-					var json = media_uploader.state().get("selection").first().toJSON();
-					var image_url = json.url;
-					var html = '<img class="gallery_img_img" src="' + image_url +
-						'" height="55" width="55" onclick="open_media_uploader_image_this(this)"/>';
-					console.log(image_url);
-					jQuery(obj).append(html);
-					jQuery(obj).find('.meta_image_url').val(image_url);
-				});
-				media_uploader.open();
-			}
-
-			function open_media_uploader_image_this(obj) {
-				media_uploader = wp.media({
-					frame: "post",
-					state: "insert",
-					multiple: false
-				});
-				media_uploader.on("insert", function() {
-					var json = media_uploader.state().get("selection").first().toJSON();
-					var image_url = json.url;
-					console.log(image_url);
-					jQuery(obj).attr('src', image_url);
-					jQuery(obj).siblings('.meta_image_url').val(image_url);
-				});
-				media_uploader.open();
-			}
-
-			function open_media_uploader_image_plus() {
-				media_uploader = wp.media({
-					frame: "post",
-					state: "insert",
-					multiple: true
-				});
-				media_uploader.on("insert", function() {
-
-					var length = media_uploader.state().get("selection").length;
-					var images = media_uploader.state().get("selection").models
-
-					for (var i = 0; i < length; i++) {
-						var image_url = images[i].changed.url;
-						var box = jQuery('#master_box').html();
-						jQuery(box).appendTo('#img_box_container');
-						var element = jQuery('#img_box_container .gallery_single_row:last-child').find(
-							'.image_container');
-						var html = '<img class="gallery_img_img" src="' + image_url +
-							'" height="55" width="55" onclick="open_media_uploader_image_this(this)"/>';
-						element.append(html);
-						element.find('.meta_image_url').val(image_url);
-						console.log(image_url);
-					}
-				});
-				media_uploader.open();
-			}
-			jQuery(function() {
-				jQuery("#img_box_container").sortable(); // Activate jQuery UI sortable feature
-			});
-		</script>
-	<?php
-}
-add_action('admin_head-post.php', 'portfolio_gallery_styles_scripts');
-add_action('admin_head-post-new.php', 'portfolio_gallery_styles_scripts');
-
-function portfolio_gallery_save($post_id)
-{
-	if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-		return;
-	}
-	$is_autosave = wp_is_post_autosave($post_id);
-	$is_revision = wp_is_post_revision($post_id);
-	$is_valid_nonce = (isset($_POST['sample_nonce']) && wp_verify_nonce($_POST['sample_nonce'], basename(__FILE__))) ? 'true' : 'false';
-
-	if ($is_autosave || $is_revision || !$is_valid_nonce) {
-		return;
-	}
-	if (!current_user_can('edit_post', $post_id)) {
-		return;
-	}
-
-	// Correct post type
-	if ('portfolios' != $_POST['post_type']) // here you can set the post type name
-		return;
-
-	if ($_POST['gallery']) {
-
-		// Build array for saving post meta
-		$gallery_data = array();
-		for ($i = 0; $i < count($_POST['gallery']['image_url']); $i++) {
-			if ('' != $_POST['gallery']['image_url'][$i]) {
-				$gallery_data['image_url'][]  = $_POST['gallery']['image_url'][$i];
-			}
+		$headers[] = 'Content-Type: text/html; charset=UTF-8';
+		$headers[] = 'From: Yuri <' . $admin . '>';
+		$headers[] = 'Replay-to:' . $email;
+		// wp_mail($email,$name,$message);  main sent to admin and the user
+		if (wp_mail($admin, $subject, $message, $headers)) {
+			// return "OK";
+			wp_send_json_success('Mail sent successfully');
+		} else {
+			// return "mail not sent";
+			wp_send_json_error('mail not sent !');
 		}
-
-		if ($gallery_data)
-			update_post_meta($post_id, 'gallery_data', $gallery_data);
-		else
-			delete_post_meta($post_id, 'gallery_data');
-	}
-	// Nothing received, all fields are empty, delete option
-	else {
-		delete_post_meta($post_id, 'gallery_data');
-	}
+	} else {
+		wp_send_json_error('wrong ajax nonce');
+	};
+	die();
 }
-add_action('save_post', 'portfolio_gallery_save');
+// THE AJAX ADD ACTIONS
+add_action('wp_ajax_send_contact_email', 'send_contact_email');    //execute when wp logged in
+add_action('wp_ajax_nopriv_send_contact_email', 'send_contact_email'); //execute when logged out

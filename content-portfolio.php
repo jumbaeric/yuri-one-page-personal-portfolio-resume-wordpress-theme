@@ -17,21 +17,24 @@
 
                             <?php
                             $photos_array = get_post_meta(get_the_ID(), 'gallery_data', true);
-                            $url_array = $photos_array['image_url'];
-                            $count = sizeof($url_array);
-                            if ($count) :
-                                for ($i = 0; $i < $count; $i++) {
+                            if (is_array($photos_array)) :
+                                $url_array = $photos_array['image_url'];
+                                $count = sizeof($url_array);
+                                if ($count) :
+                                    for ($i = 0; $i < $count; $i++) {
                             ?>
+                                        <div class="swiper-slide">
+                                            <img src="<?php echo esc_url($url_array[$i]); ?>" alt="<?php the_title('','-'.$i) ?>">
+                                        </div>
+                                    <?php
+                                    }
+                                else : ?>
                                     <div class="swiper-slide">
-                                        <img src="<?php echo $url_array[$i]; ?>" alt="">
+                                        <?php echo get_the_post_thumbnail(get_the_ID(), 'large') ?>
                                     </div>
-                                <?php
-                                }
-                            else : ?>
-                                <div class="swiper-slide">
-                                    <?php echo get_the_post_thumbnail(get_the_ID(), 'large') ?>
-                                </div>
-                            <?php endif;
+                            <?php
+                                endif;
+                            endif;
                             ?>
                         </div>
                         <div class="swiper-pagination"></div>
@@ -42,7 +45,7 @@
                     <div class="portfolio-info">
                         <h3>Project information</h3>
                         <ul>
-                            <li><strong>Category</strong>: <?php echo $classes; ?></li>
+                            <li><strong>Category</strong>: <?php echo esc_html($classes); ?></li>
                             <li><strong>Client</strong>:
                                 <?php echo get_post_meta(get_the_ID(), '_client_meta_field', true) ?></li>
                             <li><strong>Project date</strong>:

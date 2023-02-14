@@ -14,7 +14,8 @@
 
       let thisForm = this;
 
-      let action = thisForm.getAttribute('action');
+      // let action = thisForm.getAttribute('action');
+      let action = ajax_url;
       let recaptcha = thisForm.getAttribute('data-recaptcha-site-key');
       
       if( ! action ) {
@@ -26,7 +27,8 @@
       thisForm.querySelector('.sent-message').classList.remove('d-block');
 
       let formData = new FormData( thisForm );
-
+      formData.set('action', 'send_contact_email');
+      formData.set('_ajax_nonce', _ajax_nonce);
       if ( recaptcha ) {
         if(typeof grecaptcha !== "undefined" ) {
           grecaptcha.ready(function() {
