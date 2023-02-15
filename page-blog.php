@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Template Name: Page (No Sidebar)
- * Description: Page template with no sidebar.
+ * Template Name: Page Blog
+ * Description: Page template for blog archives.
  *
  */
 

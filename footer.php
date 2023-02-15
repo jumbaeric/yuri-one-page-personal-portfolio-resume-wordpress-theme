@@ -1,9 +1,7 @@
 </main><!-- /#main -->
-<?php
-$navbar_scheme   = get_theme_mod('navbar_scheme', 'navbar-light bg-light'); // Get custom meta-value.
-?>
+
 <!-- ======= Footer ======= -->
-<footer id="footer" class="<?php echo esc_attr($navbar_scheme) ?>">
+<footer id="footer" class="primary-color-scheme">
 	<div class="container">
 		<div class="copyright">
 			<?php printf(esc_html__('&copy; %1$s %2$s. All rights reserved.', 'yuri-lucas'), date_i18n('Y'), get_bloginfo('name', 'display')); ?>

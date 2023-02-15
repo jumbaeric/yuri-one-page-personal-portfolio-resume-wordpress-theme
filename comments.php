@@ -20,11 +20,11 @@ if (post_password_required()) {
 			if (comments_open() && !have_comments()) :
 			?>
 				<div class="headings d-flex justify-content-between align-items-center mb-3">
-					<h2 id="comments-title">
+					<h4 id="comments-title">
 						<?php
 						esc_html_e('No Comments yet!', 'yuri-lucas');
 						?>
-					</h2>
+					</h4>
 				</div>
 			<?php
 			endif;
@@ -32,7 +32,7 @@ if (post_password_required()) {
 			if (have_comments()) :
 			?>
 				<div class="headings d-flex justify-content-between align-items-center mb-3">
-					<h2 id="comments-title">
+					<h4 id="comments-title">
 						<?php
 						$comments_number = get_comments_number();
 						if ('1' === $comments_number) {
@@ -52,7 +52,7 @@ if (post_password_required()) {
 							);
 						}
 						?>
-					</h2>
+					</h4>
 				</div>
 				<?php
 				if (get_comment_pages_count() > 1 && get_option('page_comments')) :
@@ -95,7 +95,7 @@ if (post_password_required()) {
 			elseif (!comments_open() && !is_page() && post_type_supports(get_post_type(), 'comments')) :
 				?>
 				<div class="headings d-flex justify-content-between align-items-center mb-3">
-					<h2 id="comments-title" class="nocomments"><?php esc_html_e('Comments are closed.', 'yuri-lucas'); ?></h2>
+					<h4 id="comments-title" class="nocomments"><?php esc_html_e('Comments are closed.', 'yuri-lucas'); ?></h4>
 				</div>
 			<?php
 			endif;

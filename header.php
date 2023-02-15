@@ -13,11 +13,18 @@
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
 	<?php wp_head(); ?>
+
+	<?php
+	$colorschemecss = get_stylesheet_directory() . '/inc/colorscheme.css.php';
+	if (is_readable($colorschemecss)) {
+		require_once($colorschemecss);
+	}
+	?>
 </head>
 
 <?php
-$navbar_scheme   = get_theme_mod('navbar_scheme', 'navbar-light bg-light'); // Get custom meta-value.
-$navbar_position = get_theme_mod('navbar_position', 'static'); // Get custom meta-value.
+// $navbar_scheme   = get_theme_mod('navbar_scheme', 'navbar-light bg-light'); // Get custom meta-value.
+// $navbar_position = get_theme_mod('navbar_position', 'static'); // Get custom meta-value.
 
 $search_enabled  = get_theme_mod('search_enabled', '1'); // Get custom meta-value.
 
@@ -37,7 +44,7 @@ $github  = get_theme_mod('contact_section_github', '#'); // Get custom meta-valu
 	<i class="bi bi-list mobile-nav-toggle d-xl-none"></i>
 
 	<!-- ======= Header ======= -->
-	<header id="header" class="<?php echo esc_attr($navbar_scheme) ?>">
+	<header id="header" class="primary-color-scheme">
 		<div class="d-flex flex-column">
 
 			<div class="profile">
@@ -90,7 +97,7 @@ $github  = get_theme_mod('contact_section_github', '#'); // Get custom meta-valu
 		</div>
 	</header><!-- End Header -->
 
-	<?php if (is_home() || is_front_page()) : ?>
+	<?php if (is_front_page()) : ?>
 		<!-- ======= Hero Section ======= -->
 		<style>
 			#hero {
@@ -106,9 +113,41 @@ $github  = get_theme_mod('contact_section_github', '#'); // Get custom meta-valu
 		</style>
 		<section id="hero" class="d-flex flex-column justify-content-center align-items-center">
 			<div class="hero-container" data-aos="fade-in">
-				<h1><?php echo esc_html(get_theme_mod('resume_names', 'Yuri Lucas')) ?></h1>
-				<p>I'm a <span class="typed" data-typed-items="<?php echo esc_attr(get_theme_mod('resume_skills', 'Designer, Developer, Freelancer, Photographer')) ?>"></span>
-				</p>
+				<div class="row align-items-center g-lg-5 py-5">
+					<div class="col-lg-7 text-center text-lg-start">
+						<h1><?php echo esc_html(get_theme_mod('resume_names', 'Yuri Lucas')) ?></h1>
+						<p>I'm a <span class="typed" data-typed-items="<?php echo esc_attr(get_theme_mod('resume_skills', 'Designer, Developer, Freelancer, Photographer')) ?>"></span>
+						</p>
+					</div>
+					<div class="col-md-10 mx-auto col-lg-5">
+						<div class="p-4 rounded shadow-lg border border-light primary-color-scheme">
+							<form class="form">
+								<!-- <div class="form-floating mb-3">
+									<input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+									<label for="floatingInput">Names</label>
+								</div>
+								<div class="form-floating mb-3">
+									<input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+									<label for="floatingInput">Phone</label>
+								</div> -->
+								<div class="form-floating mb-3">
+									<input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+									<label for="floatingInput">Email</label>
+								</div>
+								<div class="form-floating mb-3">
+									<input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+									<label for="floatingInput">Service</label>
+								</div>
+								<div class="form-floating mb-3">
+									<textarea class="form-control" id="floatingPassword"></textarea>
+									<label for="floatingPassword">Description</label>
+								</div>
+								<button class="w-100 btn btn-lg btn-primary secondary-color-scheme" type="submit">Sign up</button>
+
+							</form>
+						</div>
+					</div>
+				</div>
 			</div>
 		</section><!-- End Hero -->
 	<?php endif; ?>
@@ -121,7 +160,8 @@ $github  = get_theme_mod('contact_section_github', '#'); // Get custom meta-valu
 				<div class="container">
 
 					<div class="d-flex justify-content-between align-items-center">
-						<h2><?php the_title(); ?></h2>
+						<!-- <h2><?php // the_title(); 
+									?></h2> -->
 						<ol>
 							<li><a href="<?php echo esc_url(home_url()) ?>">Home</a></li>
 							<?php if (is_category() || is_single()) : echo "<li>";
@@ -142,9 +182,3 @@ $github  = get_theme_mod('contact_section_github', '#'); // Get custom meta-valu
 				</div>
 			</section><!-- End Breadcrumbs -->
 		<?php endif; ?>
-
-		<?php
-		if (is_single() || is_archive()) :
-
-		endif;
-		?>

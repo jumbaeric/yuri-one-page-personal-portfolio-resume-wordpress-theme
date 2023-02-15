@@ -4,10 +4,17 @@
  * The template for displaying content in the single.php template.
  *
  */
+$backgroundImg = wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), 'full');	
 ?>
-<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+<div class="header-wrap" style="background: url('<?php echo $backgroundImg[0]; ?>') no-repeat;">
 	<header class="entry-header">
 		<h1 class="entry-title"><?php the_title(); ?></h1>
+		<span class="cat"><?php the_category(' '); ?></span>
+	</header>
+</div>
+<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+	<header class="entry-header">
+		<!-- <h1 class="entry-title"><?php // the_title(); ?></h1> -->
 		<?php
 		if ('post' === get_post_type()) :
 		?>
@@ -21,7 +28,7 @@
 	<div class="entry-content">
 		<?php
 		if (has_post_thumbnail()) :
-			echo '<div class="post-thumbnail">' . get_the_post_thumbnail(get_the_ID(), 'large') . '</div>';
+			// echo '<div class="post-thumbnail">' . get_the_post_thumbnail(get_the_ID(), 'large') . '</div>';
 		endif;
 
 		the_content();

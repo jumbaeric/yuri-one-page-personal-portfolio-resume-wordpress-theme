@@ -28,11 +28,16 @@ if (!function_exists('yuri_lucas_register_required_plugins')) {
 			array(
 				'name'  => 'Visual Composer Website Builder', // The plugin name
 				'slug'  => 'visualcomposer', // The plugin slug (typically the folder name)
-				// 'source'  => get_stylesheet_directory() . '/lib/plugins/visualcomposer.45.1.2.zip', // The plugin source
 				'required'  => false, // If false, the plugin is only 'recommended' instead of required
-				// 'version' => '45.1.2', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
-				// 'force_activation'  => true, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch
-				// 'force_deactivation'  => false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins
+			),
+			array(
+				'name'  => 'Yuri Portfolio Custom Post Type', // The plugin name
+				'slug'  => 'yuri-portfolio-cpt', // The plugin slug (typically the folder name)
+				'source'  => get_stylesheet_directory() . '/lib/plugins/yuri-portfolio-cpt.zip', // The plugin source
+				'required'  => true, // If false, the plugin is only 'recommended' instead of required
+				'version' => '1.0.0', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
+				'force_activation'  => false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch
+				'force_deactivation'  => false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins
 				// 'external_url'  => '', // If set, overrides default API URL and points to an external URL
 			)
 		);
@@ -148,8 +153,18 @@ if (!function_exists('yuri_lucas_setup_theme')) {
 
 		// Custom CSS styles of WorPress gallery.
 		add_filter('use_default_gallery_style', '__return_false');
+
+		add_image_size( 'blog-thumb', 300, 200, true ); // Hard Crop Mode
 	}
 	add_action('after_setup_theme', 'yuri_lucas_setup_theme');
+
+	function yuri_lucas_custom_image_sizes( $size_names ) {
+		$new_sizes = array(
+			'blog-thumb' => 'Blog Thumbmail'
+		);
+		return array_merge( $size_names, $new_sizes );
+	}
+	add_filter( 'image_size_names_choose', 'yuri_lucas_custom_image_sizes' );
 
 	// Disable Block Directory: https://github.com/WordPress/gutenberg/blob/trunk/docs/reference-guides/filters/editor-filters.md#block-directory
 	remove_action('enqueue_block_editor_assets', 'wp_enqueue_editor_block_directory_assets');
@@ -313,7 +328,7 @@ if (!function_exists('yuri_lucas_content_nav')) {
 	 */
 	function posts_link_attributes()
 	{
-		return 'class="btn btn-secondary btn-lg"';
+		return 'class="btn btn-secondary"';
 	}
 	add_filter('next_posts_link_attributes', 'posts_link_attributes');
 	add_filter('previous_posts_link_attributes', 'posts_link_attributes');
@@ -426,11 +441,11 @@ if (!function_exists('yuri_lucas_comment')) {
 	 *
 	 * @return string
 	 */
-	function yuri_lucas_replace_reply_link_class($class)
-	{
-		return str_replace("class='comment-reply-link", "class='comment-reply-link btn btn-outline-secondary", $class);
-	}
-	add_filter('comment_reply_link', 'yuri_lucas_replace_reply_link_class');
+	// function yuri_lucas_replace_reply_link_class($class)
+	// {
+	// 	return str_replace("class='comment-reply-link", "class='comment-reply-link btn btn-outline-secondary", $class);
+	// }
+	// add_filter('comment_reply_link', 'yuri_lucas_replace_reply_link_class');
 
 	/**
 	 * Template for comments and pingbacks:
@@ -602,13 +617,13 @@ if (!function_exists('yuri_lucas_comment')) {
 	add_filter('comment_form_defaults', 'yuri_lucas_custom_commentform');
 }
 
-function wpdocs_comment_reply_link_class($class)
-{
-	$class = str_replace("class='comment-reply-link btn btn-outline-secondary", "class='comment-reply-link", $class);
-	return $class;
-}
+// function wpdocs_comment_reply_link_class($class)
+// {
+// 	$class = str_replace("class='comment-reply-link btn btn-outline-secondary", "class='comment-reply-link", $class);
+// 	return $class;
+// }
 
-add_filter('comment_reply_link', 'wpdocs_comment_reply_link_class');
+// add_filter('comment_reply_link', 'wpdocs_comment_reply_link_class');
 
 
 if (function_exists('register_nav_menus')) {
@@ -721,3 +736,33 @@ function send_contact_email()
 // THE AJAX ADD ACTIONS
 add_action('wp_ajax_send_contact_email', 'send_contact_email');    //execute when wp logged in
 add_action('wp_ajax_nopriv_send_contact_email', 'send_contact_email'); //execute when logged out
+
+/**
+ * Increases or decreases the brightness of a color by a percentage of the current brightness.
+ *
+ * @param   string  $hexCode        Supported formats: `#FFF`, `#FFFFFF`, `FFF`, `FFFFFF`
+ * @param   float   $adjustPercent  A number between -1 and 1. E.g. 0.3 = 30% lighter; -0.4 = 40% darker.
+ *
+ * @return  string
+ *
+ * @author  maliayas
+ */
+function yuri_lucas_adjust_brightness($hexCode, $adjustPercent)
+{
+	$hexCode = ltrim($hexCode, '#');
+
+	if (strlen($hexCode) == 3) {
+		$hexCode = $hexCode[0] . $hexCode[0] . $hexCode[1] . $hexCode[1] . $hexCode[2] . $hexCode[2];
+	}
+
+	$hexCode = array_map('hexdec', str_split($hexCode, 2));
+
+	foreach ($hexCode as &$color) {
+		$adjustableLimit = $adjustPercent < 0 ? $color : 255 - $color;
+		$adjustAmount = ceil($adjustableLimit * $adjustPercent);
+
+		$color = str_pad(dechex($color + $adjustAmount), 2, '0', STR_PAD_LEFT);
+	}
+
+	return '#' . implode($hexCode);
+}

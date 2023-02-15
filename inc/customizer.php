@@ -127,52 +127,52 @@ function yuri_lucas_customize($wp_customize)
 	);
 
 	// Predefined Navbar scheme.
-	$wp_customize->add_setting(
-		'navbar_scheme',
-		array(
-			'default'           => 'default',
-			'sanitize_callback' => 'sanitize_text_field',
-		)
-	);
-	$wp_customize->add_control(
-		'navbar_scheme',
-		array(
-			'type'     => 'radio',
-			'label'    => __('Navbar Scheme', 'yuri-lucas'),
-			'section'  => 'theme_header_section',
-			'choices'  => array(
-				'navbar-light bg-light'  => __('Default', 'yuri-lucas'),
-				'navbar-dark bg-dark'    => __('Dark', 'yuri-lucas'),
-				'navbar-dark bg-primary' => __('Primary', 'yuri-lucas'),
-			),
-			'settings' => 'navbar_scheme',
-			'priority' => 1,
-		)
-	);
+	// $wp_customize->add_setting(
+	// 	'navbar_scheme',
+	// 	array(
+	// 		'default'           => 'default',
+	// 		'sanitize_callback' => 'sanitize_text_field',
+	// 	)
+	// );
+	// $wp_customize->add_control(
+	// 	'navbar_scheme',
+	// 	array(
+	// 		'type'     => 'radio',
+	// 		'label'    => __('Navbar Scheme', 'yuri-lucas'),
+	// 		'section'  => 'theme_header_section',
+	// 		'choices'  => array(
+	// 			'navbar-light bg-light'  => __('Default', 'yuri-lucas'),
+	// 			'navbar-dark bg-dark'    => __('Dark', 'yuri-lucas'),
+	// 			'navbar-dark bg-primary' => __('Primary', 'yuri-lucas'),
+	// 		),
+	// 		'settings' => 'navbar_scheme',
+	// 		'priority' => 1,
+	// 	)
+	// );
 
 	// Fixed Header?
-	$wp_customize->add_setting(
-		'navbar_position',
-		array(
-			'default'           => 'static',
-			'sanitize_callback' => 'sanitize_text_field',
-		)
-	);
-	$wp_customize->add_control(
-		'navbar_position',
-		array(
-			'type'     => 'radio',
-			'label'    => __('Navbar', 'yuri-lucas'),
-			'section'  => 'theme_header_section',
-			'choices'  => array(
-				'static'       => __('Static', 'yuri-lucas'),
-				'fixed_top'    => __('Fixed to top', 'yuri-lucas'),
-				'fixed_bottom' => __('Fixed to bottom', 'yuri-lucas'),
-			),
-			'settings' => 'navbar_position',
-			'priority' => 2,
-		)
-	);
+	// $wp_customize->add_setting(
+	// 	'navbar_position',
+	// 	array(
+	// 		'default'           => 'static',
+	// 		'sanitize_callback' => 'sanitize_text_field',
+	// 	)
+	// );
+	// $wp_customize->add_control(
+	// 	'navbar_position',
+	// 	array(
+	// 		'type'     => 'radio',
+	// 		'label'    => __('Navbar', 'yuri-lucas'),
+	// 		'section'  => 'theme_header_section',
+	// 		'choices'  => array(
+	// 			'static'       => __('Static', 'yuri-lucas'),
+	// 			'fixed_top'    => __('Fixed to top', 'yuri-lucas'),
+	// 			'fixed_bottom' => __('Fixed to bottom', 'yuri-lucas'),
+	// 		),
+	// 		'settings' => 'navbar_position',
+	// 		'priority' => 2,
+	// 	)
+	// );
 
 	// Search?
 	$wp_customize->add_setting(
@@ -1608,6 +1608,76 @@ function yuri_lucas_customize($wp_customize)
 		'type'     => 'text',
 		'priority' => 1,
 	));
+
+	/******************************************* 
+		Color scheme 
+	 ********************************************/
+	// add the section to contain the settings 
+	$wp_customize->add_section('textcolors', array(
+		'title' =>  'Color Scheme',
+	));
+	// main color ( site title, h1, h2, h4. h6, widget headings, nav links, footer headings ) 
+	$txtcolors[] = array(
+		'slug' => 'yuri_color_scheme_1',
+		'default' => '#149ddd',
+		'label' => 'Primary Color'
+	);
+	// secondary color ( site description, sidebar headings, h3, h5, nav links on hover ) 
+	$txtcolors[] = array(
+		'slug' => 'yuri_color_scheme_2',
+		'default' => '#173b6c',
+		'label' => 'Secondary Color'
+	);
+	// text color ( p ) 
+	$txtcolors[] = array(
+		'slug' => 'yuri_text_color',
+		'default' => '#666',
+		'label' => 'Text Color'
+	);
+	// sidebar text color ( p ) 
+	$txtcolors[] = array(
+		'slug' => 'yuri_sidebar_menu_text_color',
+		'default' => '#f4f6fd',
+		'label' => 'Sidebar Menu Text Color'
+	);
+	// link color 
+	$txtcolors[] = array(
+		'slug' => 'yuri_link_color',
+		'default' => '#149ddd',
+		'label' => 'Link Color'
+	);
+	// link color ( hover, active ) 
+	$txtcolors[] = array(
+		'slug' => 'yuri_link_hover_color',
+		'default' => '#37b3ed',
+		'label' => 'Link Color (on hover)'
+	);
+	// add the settings and controls for each color 
+	foreach ($txtcolors as $txtcolor) {
+		// SETTINGS 
+		$wp_customize->add_setting(
+			$txtcolor['slug'],
+			array(
+				'default' => $txtcolor['default'],
+				'sanitize_callback' => 'sanitize_hex_color',
+				'transport' => 'refresh',
+				// 'type' => 'option',
+			)
+		);
+		// CONTROLS 
+		$wp_customize->add_control(
+			new WP_Customize_Color_Control(
+				$wp_customize,
+				$txtcolor['slug'],
+				array(
+					'label' => $txtcolor['label'],
+					'section' => 'textcolors',
+					'settings' => $txtcolor['slug'],
+					'priority' => 1,
+				)
+			)
+		);
+	}
 	// $wp_customize->add_setting('post_type_dropdown_setting', array(
 	// 	'default'        => '',
 	// ));
